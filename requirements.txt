@@ -1,0 +1,19 @@
+Flask==0.10.1
+Jinja2==2.7.2
+MarkupSafe==0.18
+Pillow==2.3.0
+Werkzeug==0.9.4
+cffi==0.8.1
+cryptography==0.2.1
+itsdangerous==0.23
+lxml==3.3.1
+-e git+git@github.com:mitmproxy/mitmproxy.git@43a760c935a340d11a990e75033b6ab2bfc133cf#egg=mitmproxy-dev
+-e git+git@github.com:mitmproxy/netlib.git@3443bae94e090b0bf12005ef4f0ca474bd903fb1#egg=netlib-dev
+pyOpenSSL==0.14
+pyasn1==0.1.7
+pycparser==2.10
+redis==2.9.1
+requests==2.2.1
+six==1.5.2
+urwid==1.2.0
+wsgiref==0.1.2
