@@ -18,7 +18,8 @@ from pprint import pprint
 
 """ SETTINGS """
 PORT = 8889
-OVERRIDE_LOCATION = False
+OVERRIDE_LOCATION = True
+AUTOLIKE = False
 
 conn = redis.Redis()
 
@@ -30,7 +31,8 @@ except redis.ConnectionError:
 SIGNGAPORE = {u'lat': 1.290301, u'lon': 103.844555}
 TOKYO =  {u'lat': 35.678403, u'lon': 139.670506}
 PARIS =  {u'lat': 48.856614, u'lon': 2.352222}
-LOCATION = PARIS
+NYC =  {u'lat': 40.738187, u'lon': -74.005204}
+LOCATION = NYC
 
 URL = 'https://api.gotinder.com'
 
@@ -84,7 +86,6 @@ class MyMaster(flow.FlowMaster):
             # Initial recs request, triggered by the app
             if '/recs' in f.request.path:
                 self.handle_response_recs(f.request, f.response)
-                return f
 
             # Copy the token when it authenticates
             elif '/auth' == f.request.path:
@@ -92,6 +93,11 @@ class MyMaster(flow.FlowMaster):
                 token = data['token']
                 self.token = token
                 print '> Setting Token: {0}'.format(token)
+
+            # See what it says about location
+            elif '/ping' == f.request.path:
+                data = json.loads(f.response.content)
+                print data
 
             # Updates from the server about state changes
             elif '/updates' == f.request.path:
@@ -129,10 +135,15 @@ class MyMaster(flow.FlowMaster):
             if int(common_friends) > 0:
                 print 'Ohh, {0} knows {1} people that you do'.format(name,
                         common_friends)
-            self.send_like(id)
+                print id
+
+            if AUTOLIKE:
+                self.send_like(id)
 
         print '> Batch complete'
-        self.get_more_recs()
+
+        if AUTOLIKE:
+            self.get_more_recs()
 
     def get_more_recs(self):
         """ Automatically retrieve the next batch of recommendations
